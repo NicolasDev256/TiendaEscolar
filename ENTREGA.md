@@ -1,7 +1,7 @@
 # Entrega · Duelo de herramientas
 
 **Equipo:** ______________________  
-**Integrantes:** ______________________  
+**Integrantes:** Nicolas Giraldo Chica  
 **Repositorio:** https://github.com/NicolasDev256/TiendaEscolar  
 **Herramienta que nos tocó:** ☑ Selenium + Mocha &nbsp; ☐ Cypress &nbsp; ☐ Playwright + Cucumber  
 **Escenario que nos tocó:** E4 · Agencia Pixel
@@ -75,17 +75,53 @@ una tarjeta* y al leer un valor del carrito? Piensen en esperas, selectores y en
 Pega el resumen que imprimió `npm run medir` en tu kit y en el control (Playwright Test):
 
 ```text
-(resumen de tu kit)
+Midiendo: Selenium + Mocha · 10 corridas · carpeta kits\selenium
+
+  corrida 1/10   32.9 s   ✓ pasan las 3
+  corrida 2/10   24.1 s   ✓ pasan las 3
+  corrida 3/10   16.1 s   ✓ pasan las 3
+  corrida 4/10   14.1 s   ✓ pasan las 3
+  corrida 5/10    9.9 s   ✓ pasan las 3
+  corrida 6/10   11.5 s   ✓ pasan las 3
+  corrida 7/10    8.9 s   ✓ pasan las 3
+  corrida 8/10    7.7 s   ✓ pasan las 3
+  corrida 9/10    8.3 s   ✓ pasan las 3
+  corrida 10/10    7.6 s   ✓ pasan las 3
+
+Resumen
+  Velocidad ......... mediana 10.68 s  (mínimo 7.62 · máximo 32.93)
+  Estabilidad ....... 10 de 10 corridas completas
+  Código ............ 57 líneas de pruebas + 16 de soporte = 73
+  selenium-webdriver. 4.51.0 instalada · última publicación hace 1 días (v4.52.0)
+  mocha.............. 12.0.3 instalada · última publicación hace 29 días (v12.0.3)
+  Autoinforme ....... minutos {"instalacion":2,"ca2":null,"ca3":null}, diagnóstico 2/5
 ```
 
 ```text
-(resumen del control)
+Midiendo: Playwright Test (control) · 10 corridas · carpeta control\playwright
+
+  corrida 1/10   12.6 s   ✓ pasan las 3
+  corrida 2/10   12.4 s   ✓ pasan las 3
+  corrida 3/10   11.1 s   ✓ pasan las 3
+  corrida 4/10    8.8 s   ✓ pasan las 3
+  corrida 5/10    7.7 s   ✓ pasan las 3
+  corrida 6/10    6.5 s   ✓ pasan las 3
+  corrida 7/10    6.6 s   ✓ pasan las 3
+  corrida 8/10    6.1 s   ✓ pasan las 3
+  corrida 9/10    7.9 s   ✓ pasan las 3
+  corrida 10/10    7.1 s   ✓ pasan las 3
+
+Resumen
+  Velocidad ......... mediana 7.81 s  (mínimo 6.15 · máximo 12.55)
+  Estabilidad ....... 10 de 10 corridas completas
+  Código ............ 34 líneas de pruebas + 14 de soporte = 48
+  @playwright/test... 1.64.1 instalada · última publicación hace 16 días (v1.64.1)
 ```
 
-- Mediana de nuestro kit: ______ s · Mediana del control en **nuestra** máquina: ______ s · **Veces el control** (kit ÷ control): ______
-- Corridas completas de nuestro kit: ______ de ______
-- Líneas de código (pruebas + soporte): ______
-- Puntos de diagnóstico (de 5): ______
+- Mediana de nuestro kit: **10.68** s · Mediana del control en **nuestra** máquina: **7.81** s · **Veces el control** (kit ÷ control): **1.37**
+- Corridas completas de nuestro kit: **10** de **10**
+- Líneas de código (pruebas + soporte): **73** (57 + 16; el control usa 48)
+- Puntos de diagnóstico (de 5): **2**
 
 **El fallo a propósito.** ¿Qué rompieron y cómo? Pega las primeras 10 líneas de lo que dijo la herramienta y señala
 qué ayudaba a encontrar la causa y qué faltaba.
@@ -107,24 +143,33 @@ Rompimos US-01 CA1 cambiando el 8 por un 9 en `duelo.test.js:29` (`assert.equal(
       at Context.<anonymous> (pruebas\duelo.test.js:29:12)
 ```
 
+**Qué ayudaba:** el nombre de la prueba, los valores `8` y `9`, y la línea 29. **Qué faltaba:** el mensaje no dice
+*qué* se contaba (los `<h3>` del catálogo), y no quedó ninguna captura de la página para ver si había 8 tarjetas o algo
+distinto. Hubo que abrir la línea 29 para entenderlo.
+
 **Las cinco preguntas del diagnóstico** (se contestan **con el kit tal como llegó**, y el «sí» o «no» va en `autoinforme.json`).
 En la última columna digan *de dónde vino* cada evidencia: de la **herramienta** (sola), de la **configuración del kit** o de
 **código nuestro**.
 
 | Pregunta (campo en `autoinforme.json`) | ¿Sí o no? | ¿De dónde vino? |
 |---|:---:|---|
-| ¿El mensaje dice **qué** falló (el elemento o la comprobación), sin que haya que adivinar? (`diceQueFallo`) | | |
-| ¿Muestra el valor **esperado** y el **recibido**? (`esperadoYRecibido`) | | |
-| ¿Señala la **línea de nuestra prueba** donde falló? (`lineaDeLaPrueba`) | | |
-| ¿Quedó una **captura de pantalla** (o un video) de la falla en el disco? (`capturaOVideo`) | | |
-| ¿Quedó una **traza o un informe** para repasar la falla paso a paso sin volver a correrla? (`trazaOInforme`) | | |
+| ¿El mensaje dice **qué** falló (el elemento o la comprobación), sin que haya que adivinar? (`diceQueFallo`) | No | Solo dice «8 !== 9». El nombre de la prueba lo pone Mocha (librería sumada), pero nada nombra el elemento; el control de Playwright sí dice qué localizador contaba |
+| ¿Muestra el valor **esperado** y el **recibido**? (`esperadoYRecibido`) | Sí | Del `assert` de Node y del diff de Mocha: piezas sumadas, no de Selenium |
+| ¿Señala la **línea de nuestra prueba** donde falló? (`lineaDeLaPrueba`) | Sí | De la pila de errores de Node, que Mocha imprime: `pruebas\duelo.test.js:29:12` |
+| ¿Quedó una **captura de pantalla** (o un video) de la falla en el disco? (`capturaOVideo`) | No | Nadie la guarda: ni Selenium, ni Mocha, ni la configuración del kit. Habría que escribir un `afterEach` con `driver.takeScreenshot()` |
+| ¿Quedó una **traza o un informe** para repasar la falla paso a paso sin volver a correrla? (`trazaOInforme`) | No | Nadie: Mocha solo escribe en la consola y no quedó ningún archivo nuevo en el disco |
 
 **Tres cosas que nuestra medición NO demuestra** (pistas: cuántas pruebas, cuántas corridas, cuántas máquinas,
 qué mide el tiempo, qué cuenta una «línea de código»):
 
-1.
-2.
-3.
+1. **Que escale.** Son 3 pruebas cortas sobre una tienda local. Con 300 pruebas pesarían cosas que aquí no aparecen:
+   ejecutar en paralelo, el mantenimiento de los XPath y las esperas escritas a mano.
+2. **Que el tiempo sea solo de la herramienta.** Cada corrida mide `npm test` completo (arrancar Node, la tienda y Chrome),
+   en un solo computador. Además, las primeras corridas fueron mucho más lentas (32.9 s frente a unos 8 s al final) porque
+   el equipo acababa de encenderse: con 10 corridas la mediana todavía arrastra ese calentamiento.
+3. **Que menos líneas sea menos trabajo.** Las 73 líneas cuentan código, no dificultad: no miden cuánto costó encontrar
+   un selector ni la prueba de 17/71 que pasaba sin comprobar nada. Tampoco miden otros navegadores (solo Chrome) ni
+   otras máquinas.
 
 ## 4. Mirando el tablero (Parte 5)
 

@@ -1,0 +1,49 @@
+{
+  "esquema": 1,
+  "equipo": "",
+  "herramienta": "playwright",
+  "nombre": "Playwright Test (control)",
+  "fecha": "2026-10-30T19:00:07.849Z",
+  "entorno": {
+    "node": "v24.19.0",
+    "sistema": "win32 x64"
+  },
+  "corridas": {
+    "total": 10,
+    "completas": 10,
+    "conFallos": 0,
+    "segundos": [
+      12.55,
+      12.42,
+      11.15,
+      8.77,
+      7.74,
+      6.53,
+      6.6,
+      6.15,
+      7.87,
+      7.13
+    ],
+    "mediana": 7.81,
+    "minimo": 6.15,
+    "maximo": 12.55
+  },
+  "pruebas": {
+    "esperadas": 3,
+    "pasanEnLaUltimaCorrida": 3
+  },
+  "codigo": {
+    "pruebas": 34,
+    "soporte": 14,
+    "total": 48
+  },
+  "paquetes": {
+    "@playwright/test": {
+      "instalada": "1.64.1",
+      "ultimaVersion": "1.64.1",
+      "ultimaPublicacion": "2026-10-14T11:58:13.696Z",
+      "dias": 16
+    }
+  },
+  "autoinforme": null
+}
