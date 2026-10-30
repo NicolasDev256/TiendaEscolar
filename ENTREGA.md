@@ -90,8 +90,21 @@ Pega el resumen que imprimió `npm run medir` en tu kit y en el control (Playwri
 **El fallo a propósito.** ¿Qué rompieron y cómo? Pega las primeras 10 líneas de lo que dijo la herramienta y señala
 qué ayudaba a encontrar la causa y qué faltaba.
 
+Rompimos US-01 CA1 cambiando el 8 por un 9 en `duelo.test.js:29` (`assert.equal(productos.length, 9)`):
+
 ```text
-(salida del fallo)
+  1) Duelo · tres criterios de aceptación
+       US-01 CA1: el catálogo muestra 8 productos:
+
+      AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+8 !== 9
+
+      + expected - actual
+
+      -8
+      +9
+      at Context.<anonymous> (pruebas\duelo.test.js:29:12)
 ```
 
 **Las cinco preguntas del diagnóstico** (se contestan **con el kit tal como llegó**, y el «sí» o «no» va en `autoinforme.json`).
