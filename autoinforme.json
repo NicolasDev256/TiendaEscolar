@@ -1,10 +1,10 @@
 {
   "equipo": "",
   "integrantes": [],
-  "escenario": "",
-  "usoDeIA": "",
+  "escenario": "E4 · Agencia Pixel",
+  "usoDeIA": "generó código",
   "minutos": {
-    "instalacion": null,
+    "instalacion": 2,
     "ca2": null,
     "ca3": null
   },

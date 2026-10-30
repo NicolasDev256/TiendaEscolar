@@ -30,18 +30,34 @@ describe('Duelo · tres criterios de aceptación', function () {
   });
 
   // ------------------------------------------------------------------ TU TURNO · US-04 CA2
-  it.skip('US-04 CA2: no deja agregar 7 mochilas de una vez (stock 6) y avisa', async () => {
+  it('US-04 CA2: no deja agregar 7 mochilas de una vez (stock 6) y avisa', async () => {
     // Dado   un producto con stock 6 (la Mochila escolar),
     // Cuando intento agregar 7 unidades de una vez,
     // Entonces veo un aviso con el stock disponible y no se agrega nada.
-    //
-    // Pistas:
-    //  · La tarjeta de la mochila es el <div class="rounded-lg"> que contiene el <h3> «Mochila escolar»
-    //    (XPath: //h3[normalize-space()='...']/ancestor::div[contains(@class,'rounded-lg')][1]).
-    //  · El campo de cantidad ya trae un 1 y sendKeys escribe AL FINAL (daría 17): selecciónenlo antes con
-    //    sendKeys(Key.chord(Key.CONTROL, 'a'), '7')  (en macOS también sirve Key.COMMAND).
-    //  · El aviso es un alert() del navegador: until.alertIsPresent() → driver.switchTo().alert() → getText() → accept().
-    //  · «Nada se agrega» = el carrito sigue diciendo «Tu carrito está vacío.»
+    await driver.get(BASE_URL);
+    const tarjeta = await driver.wait(
+      until.elementLocated(
+        By.xpath("//h3[normalize-space()='Mochila escolar']/ancestor::div[contains(@class,'rounded-lg')][1]")
+      ),
+      5000
+    );
+
+    // El campo ya trae un 1 y sendKeys escribe al final: se selecciona todo antes para que quede 7 y no 17.
+    const cantidad = await tarjeta.findElement(By.css('input[type="number"]'));
+    await cantidad.sendKeys(Key.chord(Key.CONTROL, 'a'), '7');
+    // Con 17 la tienda da el MISMO aviso (también supera el stock): sin esta comprobación la prueba pasaría igual.
+    assert.equal(await cantidad.getAttribute('value'), '7');
+    await tarjeta.findElement(By.xpath(".//button[normalize-space()='Agregar']")).click();
+
+    // El aviso es un alert() nativo: se espera, se lee y se acepta (el kit lo deja abierto, ver soporte/driver.js).
+    await driver.wait(until.alertIsPresent(), 5000);
+    const alerta = await driver.switchTo().alert();
+    const aviso = await alerta.getText();
+    await alerta.accept();
+    assert.equal(aviso, 'Solo hay 6 unidades disponibles de Mochila escolar.');
+
+    const vacio = await driver.findElements(By.xpath("//*[normalize-space(text())='Tu carrito está vacío.']"));
+    assert.equal(vacio.length, 1, 'El carrito ya no dice «Tu carrito está vacío.»: se agregó algo');
   });
 
   // ------------------------------------------------------------------ TU TURNO · US-09 CA1

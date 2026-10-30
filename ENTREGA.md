@@ -2,9 +2,9 @@
 
 **Equipo:** ______________________  
 **Integrantes:** ______________________  
-**Repositorio:** ______________________  
-**Herramienta que nos tocó:** ☐ Selenium + Mocha &nbsp; ☐ Cypress &nbsp; ☐ Playwright + Cucumber  
-**Escenario que nos tocó:** ______________________
+**Repositorio:** https://github.com/NicolasDev256/TiendaEscolar  
+**Herramienta que nos tocó:** ☑ Selenium + Mocha &nbsp; ☐ Cypress &nbsp; ☐ Playwright + Cucumber  
+**Escenario que nos tocó:** E4 · Agencia Pixel
 
 > Completa este archivo a medida que avanzas (cada sección dice en qué parte de la guía se llena).
 > Lo que se mide con números lo guarda el medidor en `medidas.json`; aquí va lo que un número no dice.
@@ -31,18 +31,20 @@ que vienen con él. Para cada tarea que alguien debe cumplir en una prueba de in
 
 | Tarea | ¿Quién la hace? | ¿Dónde lo vemos? (archivo y línea) |
 |---|---|---|
-| Abrir el navegador y cerrarlo al terminar | | |
-| Esperar a que el elemento exista o se pueda usar | | |
-| Reintentar una comprobación que todavía no se cumple | | |
-| Ejecutar las pruebas, contarlas y decir cuántas pasaron | | |
-| Comprobar un valor y mostrar «esperado» y «recibido» | | |
-| Leer el texto de un `alert()` del navegador *(lo descubren en la Parte 2)* | | |
-| Dejar evidencia (captura, video o traza) cuando una prueba falla | | |
+| Abrir el navegador y cerrarlo al terminar | **Código nuestro.** Selenium sabe abrir Chrome (`new Builder()…build()`) y cerrarlo (`driver.quit()`), pero somos nosotros quienes lo llamamos antes y después de cada prueba con los *hooks* de Mocha. El *chromedriver* lo baja Selenium Manager solo | `kits/selenium/soporte/driver.js:9-17` (crear) · `kits/selenium/pruebas/duelo.test.js:15-20` (`beforeEach` / `afterEach`) |
+| Esperar a que el elemento exista o se pueda usar | **Código nuestro.** Selenium trae la herramienta (`driver.wait` + `until`), pero no espera si no se lo pedimos: hay que escribir cada espera con su tiempo límite. `findElements` de la línea 28 no espera nada; funciona porque la línea 26 ya esperó | `kits/selenium/pruebas/duelo.test.js:26` |
+| Reintentar una comprobación que todavía no se cumple | **Nadie.** `assert.equal` comprueba una sola vez: si en ese instante hay 7 tarjetas, falla. Mocha podría repetir la prueba entera (`retries`), pero el kit no lo configura | `kits/selenium/pruebas/duelo.test.js:29` · `kits/selenium/.mocharc.json` (sin `retries`) |
+| Ejecutar las pruebas, contarlas y decir cuántas pasaron | **Librería sumada: Mocha.** Encuentra los archivos, corre los `it`, salta los `it.skip` y escribe «1 passing / 2 pending» | `kits/selenium/package.json:10` (`mocha`) · `kits/selenium/.mocharc.json:2` (`spec`) |
+| Comprobar un valor y mostrar «esperado» y «recibido» | **Librería sumada: `assert` de Node** (`node:assert/strict`, viene con Node, no es de Selenium). Al fallar lanza un `AssertionError` con *expected* y *actual*, y Mocha lo imprime como diferencia | `kits/selenium/pruebas/duelo.test.js:1` y `:29` |
+| Leer el texto de un `alert()` del navegador *(lo descubren en la Parte 2)* | **Selenium + configuración del kit.** Selenium lo lee (`until.alertIsPresent()`, `switchTo().alert().getText()`, `accept()`), pero solo porque el kit pide a ChromeDriver no cerrarlo solo (`unhandledPromptBehavior: 'ignore'`) | `kits/selenium/soporte/driver.js:14-16` · pista en `kits/selenium/pruebas/duelo.test.js:43` |
+| Dejar evidencia (captura, video o traza) cuando una prueba falla | **Nadie.** Ni Selenium ni Mocha guardan captura, video ni traza por su cuenta. Selenium tiene `driver.takeScreenshot()`, pero habría que llamarlo nosotros en un `afterEach` cuando la prueba falla | Ningún archivo del kit lo hace (`duelo.test.js:18-20` solo cierra el navegador) |
 
 **Con esta tabla:** ¿la herramienta que nos tocó es una *librería*, un *framework*, o una librería con piezas que
 tuvimos que armar nosotros? Respondan en dos frases con la idea «la librería la llamas tú; el framework te llama a ti».
 
-> _Respuesta:_
+> _Respuesta:_ Selenium es una **librería con piezas armadas**: nosotros la llamamos para abrir el navegador, esperar,
+> buscar y cerrar, y ella no hace nada que no le pidamos. Quien nos llama a nosotros es Mocha (el ejecutor que sumamos),
+> y las aserciones vienen de Node: de las siete tareas, dos son código nuestro, dos las ponen piezas sumadas y dos no las cubre nadie.
 
 ## 2. Bitácora de las historias (Partes 2 y 3)
 
@@ -51,11 +53,11 @@ hasta que ven la prueba en verde.
 
 | | US-04 CA2 (7 mochilas, stock 6) | US-09 CA1 (DESC10) |
 |---|---|---|
-| Minutos hasta el verde | | |
-| Primer intento que **no** funcionó: qué escribimos y qué dijo la herramienta | | |
-| Mensaje de error que nos ayudó (o que nos confundió) | | |
-| Qué tuvimos que buscar en la documentación (enlace) | | |
-| Qué haría distinto un equipo con más experiencia en esta herramienta | | |
+| Minutos hasta el verde | _(código generado con IA, ver `usoDeIA`)_ | |
+| Primer intento que **no** funcionó: qué escribimos y qué dijo la herramienta | La primera versión pasaba en verde, pero **también pasaba sin seleccionar el campo** (sin `Key.chord(Key.CONTROL, 'a')`): con 17 (o 71) la tienda da el mismo aviso «Solo hay 6 unidades…» y no agrega nada. La herramienta no dijo nada porque no había error: la prueba no distinguía 7 de 17. Lo arreglamos comprobando el valor del campo antes del clic (`duelo.test.js:49`) | |
+| Mensaje de error que nos ayudó (o que nos confundió) | Al probar sin seleccionar: `'71' !== '7'` en `duelo.test.js:49`. Ayudó y sorprendió: esperábamos 17, pero en Chrome sin ventana el cursor quedó **al inicio** del campo y el 7 se escribió delante del 1 | |
+| Qué tuvimos que buscar en la documentación (enlace) | Cómo esperar, leer y aceptar un `alert()`: https://www.selenium.dev/documentation/webdriver/interactions/alerts/ | |
+| Qué haría distinto un equipo con más experiencia en esta herramienta | Escribiría un ayudante propio que seleccione, escriba y compruebe el valor de un campo, y guardaría los selectores XPath de la tarjeta en una función reutilizable (US-09 CA1 vuelve a buscar la misma tarjeta) | |
 
 **Lo más distinto frente a US-01 CA1** (el ejemplo resuelto): ¿qué cambió al leer un `alert()`, al elegir *dentro de
 una tarjeta* y al leer un valor del carrito? Piensen en esperas, selectores y en cómo leyeron el resultado.
