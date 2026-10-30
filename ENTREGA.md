@@ -53,16 +53,22 @@ hasta que ven la prueba en verde.
 
 | | US-04 CA2 (7 mochilas, stock 6) | US-09 CA1 (DESC10) |
 |---|---|---|
-| Minutos hasta el verde | _(código generado con IA, ver `usoDeIA`)_ | |
-| Primer intento que **no** funcionó: qué escribimos y qué dijo la herramienta | La primera versión pasaba en verde, pero **también pasaba sin seleccionar el campo** (sin `Key.chord(Key.CONTROL, 'a')`): con 17 (o 71) la tienda da el mismo aviso «Solo hay 6 unidades…» y no agrega nada. La herramienta no dijo nada porque no había error: la prueba no distinguía 7 de 17. Lo arreglamos comprobando el valor del campo antes del clic (`duelo.test.js:49`) | |
-| Mensaje de error que nos ayudó (o que nos confundió) | Al probar sin seleccionar: `'71' !== '7'` en `duelo.test.js:49`. Ayudó y sorprendió: esperábamos 17, pero en Chrome sin ventana el cursor quedó **al inicio** del campo y el 7 se escribió delante del 1 | |
-| Qué tuvimos que buscar en la documentación (enlace) | Cómo esperar, leer y aceptar un `alert()`: https://www.selenium.dev/documentation/webdriver/interactions/alerts/ | |
-| Qué haría distinto un equipo con más experiencia en esta herramienta | Escribiría un ayudante propio que seleccione, escriba y compruebe el valor de un campo, y guardaría los selectores XPath de la tarjeta en una función reutilizable (US-09 CA1 vuelve a buscar la misma tarjeta) | |
+| Minutos hasta el verde | _(código generado con IA, ver `usoDeIA`)_ | _(código generado con IA, ver `usoDeIA`)_ |
+| Primer intento que **no** funcionó: qué escribimos y qué dijo la herramienta | La primera versión pasaba en verde, pero **también pasaba sin seleccionar el campo** (sin `Key.chord(Key.CONTROL, 'a')`): con 17 (o 71) la tienda da el mismo aviso «Solo hay 6 unidades…» y no agrega nada. La herramienta no dijo nada porque no había error: la prueba no distinguía 7 de 17. Lo arreglamos comprobando el valor del campo antes del clic (`duelo.test.js:49`) | La pista decía que React dibuja la fila «Descuento» después del clic, y el primer intento esperaba la fila que **empieza** por «Descuento». Pero esa fila ya existe desde que hay algo en el carrito («Descuento (0%)», «− $ 0»): la espera se cumpliría al instante y podría leer el 0 de antes. Lo vimos en el código de la tienda antes de correrla y la cambiamos para esperar la fila «Descuento (10%)» (`duelo.test.js:83-86`) |
+| Mensaje de error que nos ayudó (o que nos confundió) | Al probar sin seleccionar: `'71' !== '7'` en `duelo.test.js:49`. Ayudó y sorprendió: esperábamos 17, pero en Chrome sin ventana el cursor quedó **al inicio** del campo y el 7 se escribió delante del 1 | Al cambiar el esperado a 6600: `La fila «Descuento» dice «− $ 6.500»` y `'6500' !== '6600'` en `duelo.test.js:89`. Ayudó porque el mensaje propio muestra el texto tal como sale en pantalla, no solo los dígitos que comparamos |
+| Qué tuvimos que buscar en la documentación (enlace) | Cómo esperar, leer y aceptar un `alert()`: https://www.selenium.dev/documentation/webdriver/interactions/alerts/ | Esperas explícitas con `driver.wait` y `until`: https://www.selenium.dev/documentation/webdriver/waits/ |
+| Qué haría distinto un equipo con más experiencia en esta herramienta | Escribiría un ayudante propio que seleccione, escriba y compruebe el valor de un campo, y guardaría los selectores XPath de la tarjeta en una función reutilizable (US-09 CA1 vuelve a buscar la misma tarjeta) | Guardaría en `soporte/` funciones como `tarjetaDe(nombre)` y `valorDeFila(etiqueta)`, y compararía el dinero con una función que entienda el formato `es-CO` en lugar de quitar todo lo que no sea dígito |
 
 **Lo más distinto frente a US-01 CA1** (el ejemplo resuelto): ¿qué cambió al leer un `alert()`, al elegir *dentro de
 una tarjeta* y al leer un valor del carrito? Piensen en esperas, selectores y en cómo leyeron el resultado.
 
-> _Respuesta:_
+> _Respuesta:_ En US-01 CA1 bastaba una espera y contar `<h3>`. Aquí hubo que **elegir dentro de una tarjeta**: un
+> XPath que sube del `<h3>` «Mochila escolar» a su `div.rounded-lg` y desde ahí busca el campo y el botón, porque las
+> ocho tarjetas tienen un «Agregar» igual. El **`alert()`** no es parte de la página: hay que esperarlo con
+> `until.alertIsPresent()`, cambiar a él, leerlo y aceptarlo, y solo funciona porque el kit le dice a ChromeDriver que no
+> lo cierre. Y al **leer el carrito** la espera tuvo que ser por el *valor* («Descuento (10%)»), no solo por que el
+> elemento exista: en US-01 el elemento aparecía una vez; aquí ya estaba y cambia después del clic. Además, el dinero
+> viene formateado («− $ 6.500»), así que comparamos los dígitos.
 
 ## 3. Lo que medimos (Parte 4)
 

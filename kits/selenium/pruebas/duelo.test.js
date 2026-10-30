@@ -61,15 +61,31 @@ describe('Duelo · tres criterios de aceptación', function () {
   });
 
   // ------------------------------------------------------------------ TU TURNO · US-09 CA1
-  it.skip('US-09 CA1: DESC10 descuenta el 10 % del subtotal', async () => {
+  it('US-09 CA1: DESC10 descuenta el 10 % del subtotal', async () => {
     // Dado   un carrito con productos (1 Mochila escolar, $ 65.000),
     // Cuando aplico el código DESC10,
     // Entonces el descuento es el 10 % del subtotal: $ 6.500.
-    //
-    // Pistas:
-    //  · Agregar la mochila: el botón «Agregar» de SU tarjeta (la cantidad por defecto es 1).
-    //  · El campo del código se ubica por su placeholder: input[placeholder='Código de descuento'].
-    //  · El valor está en la fila cuyo <dt> empieza por «Descuento»: su hermano <dd> (XPath: following-sibling::dd).
-    //  · React dibuja esa fila DESPUÉS del clic en «Aplicar»: espérala con driver.wait(...) antes de leerla.
+    await driver.get(BASE_URL);
+    const tarjeta = await driver.wait(
+      until.elementLocated(
+        By.xpath("//h3[normalize-space()='Mochila escolar']/ancestor::div[contains(@class,'rounded-lg')][1]")
+      ),
+      5000
+    );
+    await tarjeta.findElement(By.xpath(".//button[normalize-space()='Agregar']")).click();
+
+    const codigo = await driver.wait(until.elementLocated(By.css("input[placeholder='Código de descuento']")), 5000);
+    await codigo.sendKeys('DESC10');
+    await driver.findElement(By.xpath("//button[normalize-space()='Aplicar']")).click();
+
+    // La fila ya existe con «Descuento (0%)» y «− $ 0»; React la actualiza DESPUÉS del clic.
+    // Se espera a que diga «(10%)» para no leer el 0 de antes.
+    const descuento = await driver.wait(
+      until.elementLocated(By.xpath("//dt[normalize-space()='Descuento (10%)']/following-sibling::dd")),
+      5000
+    );
+    // El <dd> dice «− $ 6.500» (con espacios especiales del formato es-CO): se comparan solo los dígitos.
+    const texto = await descuento.getText();
+    assert.equal(texto.replace(/\D/g, ''), '6500', `La fila «Descuento» dice «${texto}»`);
   });
 });
