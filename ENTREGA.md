@@ -1,6 +1,6 @@
 # Entrega · Duelo de herramientas
 
-**Equipo:** Nicolas Giraldo Chica (trabajo individual)  
+**Equipo:** ______________________  
 **Integrantes:** Nicolas Giraldo Chica  
 **Repositorio:** https://github.com/NicolasDev256/TiendaEscolar  
 **Herramienta que nos tocó:** ☑ Selenium + Mocha &nbsp; ☐ Cypress &nbsp; ☐ Playwright + Cucumber  
@@ -53,7 +53,7 @@ hasta que ven la prueba en verde.
 
 | | US-04 CA2 (7 mochilas, stock 6) | US-09 CA1 (DESC10) |
 |---|---|---|
-| Minutos hasta el verde | ≈ 5 (estimado; código generado con IA, ver `usoDeIA`) | ≈ 5 (estimado; código generado con IA, ver `usoDeIA`) |
+| Minutos hasta el verde | _(código generado con IA, ver `usoDeIA`)_ | _(código generado con IA, ver `usoDeIA`)_ |
 | Primer intento que **no** funcionó: qué escribimos y qué dijo la herramienta | La primera versión pasaba en verde, pero **también pasaba sin seleccionar el campo** (sin `Key.chord(Key.CONTROL, 'a')`): con 17 (o 71) la tienda da el mismo aviso «Solo hay 6 unidades…» y no agrega nada. La herramienta no dijo nada porque no había error: la prueba no distinguía 7 de 17. Lo arreglamos comprobando el valor del campo antes del clic (`duelo.test.js:49`) | La pista decía que React dibuja la fila «Descuento» después del clic, y el primer intento esperaba la fila que **empieza** por «Descuento». Pero esa fila ya existe desde que hay algo en el carrito («Descuento (0%)», «− $ 0»): la espera se cumpliría al instante y podría leer el 0 de antes. Lo vimos en el código de la tienda antes de correrla y la cambiamos para esperar la fila «Descuento (10%)» (`duelo.test.js:83-86`) |
 | Mensaje de error que nos ayudó (o que nos confundió) | Al probar sin seleccionar: `'71' !== '7'` en `duelo.test.js:49`. Ayudó y sorprendió: esperábamos 17, pero en Chrome sin ventana el cursor quedó **al inicio** del campo y el 7 se escribió delante del 1 | Al cambiar el esperado a 6600: `La fila «Descuento» dice «− $ 6.500»` y `'6500' !== '6600'` en `duelo.test.js:89`. Ayudó porque el mensaje propio muestra el texto tal como sale en pantalla, no solo los dígitos que comparamos |
 | Qué tuvimos que buscar en la documentación (enlace) | Cómo esperar, leer y aceptar un `alert()`: https://www.selenium.dev/documentation/webdriver/interactions/alerts/ | Esperas explícitas con `driver.wait` y `until`: https://www.selenium.dev/documentation/webdriver/waits/ |
