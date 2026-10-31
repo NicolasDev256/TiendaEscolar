@@ -1,12 +1,12 @@
 {
-  "equipo": "",
-  "integrantes": [],
+  "equipo": "Nicolas Giraldo Chica",
+  "integrantes": ["Nicolas Giraldo Chica"],
   "escenario": "E4 · Agencia Pixel",
   "usoDeIA": "generó código",
   "minutos": {
     "instalacion": 2,
-    "ca2": null,
-    "ca3": null
+    "ca2": 5,
+    "ca3": 5
   },
   "diagnostico": {
     "diceQueFallo": false,
@@ -15,5 +15,5 @@
     "capturaOVideo": false,
     "trazaOInforme": false
   },
-  "notas": "Fallo a propósito: 8 → 9 en duelo.test.js:29 (US-01 CA1). diceQueFallo=false: el mensaje solo dice «8 !== 9», sin nombrar el elemento (los <h3>); hay que abrir la línea para saber qué se contaba. esperadoYRecibido=true: lo dan el assert de Node (librería sumada) y el diff de Mocha. lineaDeLaPrueba=true: la pila de Node, impresa por Mocha, señala pruebas\\duelo.test.js:29:12. capturaOVideo=false y trazaOInforme=false: no quedó ningún archivo nuevo en el disco; ni Selenium ni Mocha ni el kit guardan evidencia. Código de US-04 CA2 y US-09 CA1 generado con un asistente de IA (Claude) y revisado por el equipo."
+  "notas": "Fallo a propósito: 8 → 9 en duelo.test.js:29 (US-01 CA1). diceQueFallo=false: el mensaje solo dice «8 !== 9», sin nombrar el elemento (los <h3>); hay que abrir la línea para saber qué se contaba. esperadoYRecibido=true: lo dan el assert de Node (librería sumada) y el diff de Mocha. lineaDeLaPrueba=true: la pila de Node, impresa por Mocha, señala pruebas\\duelo.test.js:29:12. capturaOVideo=false y trazaOInforme=false: no quedó ningún archivo nuevo en el disco; ni Selenium ni Mocha ni el kit guardan evidencia. Código de US-04 CA2 y US-09 CA1 generado con un asistente de IA (Claude) y revisado por el equipo. Minutos ca2 y ca3 estimados a partir de la hora de los commits, no cronometrados: como el código lo generó la IA, no son comparables con los de un equipo que lo escribió a mano."
 }
